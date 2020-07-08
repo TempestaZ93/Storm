@@ -1,0 +1,9 @@
+[submodule "Storm/vendor/glfw"]
+	path = Storm/vendor/glfw
+	url = git@github.com:glfw/glfw.git
+[submodule "Storm/vendor/glm"]
+	path = Storm/vendor/glm
+	url = git@github.com:g-truc/glm.git
+[submodule "Storm/vendor/fmt"]
+	path = Storm/vendor/fmt
+	url = https://github.com/fmtlib/fmt.git

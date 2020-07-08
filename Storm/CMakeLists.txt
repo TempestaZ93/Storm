@@ -1,0 +1,35 @@
+CMAKE_MINIMUM_REQUIRED ( VERSION 3.15 )
+
+PROJECT ( Storm_Engine )
+
+OPTION ( STORM_USE_VULKAN "Use Vulkan as rendering API" ON )
+OPTION ( STORM_BUILD_TESTS "Build test suite." OFF )
+
+SET ( glfw_PATH vendor/glfw )
+SET ( glm_PATH vendor/glm )
+SET ( fmt_PATH vendor/fmt )
+
+ADD_SUBDIRECTORY ( ${glfw_PATH} )
+ADD_SUBDIRECTORY ( ${glm_PATH} )
+ADD_SUBDIRECTORY ( ${fmt_PATH} )
+
+LIST ( APPEND STORM_INCLUDE_PUBLIC "include" ${glm_PATH}/glm )
+LIST ( APPEND STORM_INCLUDE_PRIVATE ${glfw_PATH}/inlcude )
+LIST ( APPEND STORM_INCLUDE_PRIVATE ${fmt_PATH}/include )
+
+IF ( STORM_USE_VULKAN )
+    SET ( Vulkan_PATH vendor/vulkan )
+    LIST ( APPEND STORM_INCLUDE_PRIVATE $ENV{VULKAN_SDK}/include )
+    LIST ( APPEND STORM_LINK_DIRS $ENV{VULKAN_SDK}/lib $ENV{VULKAN_SDK}/etc/explicit_layer.d )
+ENDIF ()
+
+FILE ( GLOB_RECURSE Storm_HDR include/*.h )
+FILE ( GLOB_RECURSE Storm_SRC src/*.cpp )
+
+ADD_EXECUTABLE ( Storm ${Storm_HDR} ${Storm_SRC} )
+
+TARGET_PRECOMPILE_HEADERS ( Storm PUBLIC "include/common/PCH.h" )
+
+TARGET_INCLUDE_DIRECTORIES ( Storm PUBLIC ${STORM_INCLUDE_PUBLIC} PRIVATE ${STORM_INCLUDE_PRIVATE} )
+TARGET_LINK_DIRECTORIES ( Storm PRIVATE ${STORM_LINK_DIRS} )
+TARGET_LINK_LIBRARIES ( Storm glfw glm fmt )
